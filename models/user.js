@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
   username: {type: String, unique: true, required: true},
+  realname: {type: String, required: true},
   active: Boolean,
   latitude: Number,
   longitude: Number,
