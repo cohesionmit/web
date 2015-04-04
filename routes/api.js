@@ -65,7 +65,7 @@ router.post('/classes', function(req, res) {
 });
 
 /*****************************************
- * RPCs
+ * OTHER
  *****************************************/
 
 /* GET an easter egg */
