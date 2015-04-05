@@ -1,4 +1,4 @@
-var exports = {}
+var exports = {};
 
 exports.lift = function(res, handler) {
   return function(err, resource) {
@@ -13,6 +13,6 @@ exports.lift = function(res, handler) {
 
 exports.copy = function(obj) {
   return JSON.parse(JSON.stringify(obj));
-}
+};
 
 module.exports = exports;

@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var _ = require('underscore');
 
-var util = require('../util')
+var util = require('../util');
 var User = require('../models/user');
 
 /* GET status page */

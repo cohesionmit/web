@@ -13,10 +13,10 @@ var config = function(mode) {
     port: port,
     dbUrl: dbUrl,
     debug: debug,
-    sessionSecret: sessionSecret,
+    sessionSecret: sessionSecret
   };
 };
 
 module.exports = function() {
-    return config(process.env.NODE_ENV || 'development')
+    return config(process.env.NODE_ENV || 'development');
 };
