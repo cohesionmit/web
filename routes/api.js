@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-var Users = require('../models/user.js');
+var util = require('../util')
+var User = require('../models/user');
 
 /* GET status page */
 router.get('/', function(req, res, next) {
@@ -21,13 +22,19 @@ router.post('/login', function(req, res) {
 
 /* POST to log out */
 router.post('/logout', function(req, res) {
-  // this doesn't actually do anything
+  // this doesn't actually need to do anything
   res.send({status: 'ok'});
 });
 
 /* POST to register */
 router.post('/register', function(req, res) {
-  // TODO
+  var first = req.body.firstname;
+  var last = req.body.lastname;
+  var fburl = req.body.fburl;
+  User.create({firstname: first, lastname: last, fburl: fburl}, util.lift(res, function(user) {
+    res.status(200);
+    res.send({success: true});
+  }));
 });
 
 /*****************************************
@@ -37,7 +44,7 @@ router.post('/register', function(req, res) {
 /* PUT to change profile */
 router.post('/profile', function(req, res) {
   // can update username, real name
-  // TODO
+  // we never actually need to do this
 });
 
 /*****************************************
@@ -51,17 +58,33 @@ router.post('/near', function(req, res) {
 
 /* POST to update location */
 router.post('/location', function(req, res) {
-  // TODO
+  User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
+    user.location.longitude = req.body.longitude;
+    user.location.latitude = req.body.latitude;
+    user.save(util.lift(res, function() {
+      res.status(200);
+      res.send({success: true});
+    }));
+  }));
 });
 
 /* GET classes */
-router.post('/classes', function(req, res) {
-  // TODO
+router.get('/classes', function(req, res) {
+  User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
+    res.status(200);
+    res.send(user.classes);
+  }));
 });
 
 /* POST to update classes */
 router.post('/classes', function(req, res) {
-  // TODO
+  User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
+    user.classes = req.body.classes;
+    user.save(util.lift(res, function() {
+      res.status(200);
+      res.send({success: true});
+    }));
+  }));
 });
 
 /*****************************************
@@ -70,7 +93,8 @@ router.post('/classes', function(req, res) {
 
 /* GET an easter egg */
 router.get('/easteregg', function(req, res) {
-  // TODO
+  res.status(200);
+  res.send({success: true});
 });
 
 module.exports = router;

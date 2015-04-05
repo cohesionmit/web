@@ -11,6 +11,9 @@ var config = require('./config')();
 
 var app = express();
 
+var mongoose = require('mongoose');
+var db = mongoose.connect(config.dbUrl);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
