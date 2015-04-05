@@ -68,10 +68,14 @@ router.get('/near', function(req, res) {
         return obj;
       });
       var filtered = _.filter(withDistance, function(elem) {
+        // check to see if user is self
+        if (elem.fburl === user.fburl) {
+          return false;
+        }
         // check to see if classes in common
         for (var i = 0; i < elem.classes.length; i++) {
           for (var j = 0; j < user.classes.length; j++) {
-            if (elem.classes[i].name == user.classes[i].name) {
+            if (elem.classes[i].name === user.classes[i].name) {
               return true;
             }
           }
