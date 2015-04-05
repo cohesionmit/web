@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
+var _ = require('underscore');
 
 var util = require('../util')
 var User = require('../models/user');
@@ -42,7 +44,7 @@ router.post('/register', function(req, res) {
  *****************************************/
 
 /* PUT to change profile */
-router.post('/profile', function(req, res) {
+router.put('/profile', function(req, res) {
   // can update username, real name
   // we never actually need to do this
 });
@@ -52,8 +54,34 @@ router.post('/profile', function(req, res) {
  *****************************************/
 
 /* GET to find people nearby */
-router.post('/near', function(req, res) {
-  // TODO
+router.get('/near', function(req, res) {
+  User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
+    User.geoNear(user.location, {
+      spherical : true,  // tell mongo the earth is round, so it calculates based on a
+                         // spherical location system
+      distanceMultiplier: 6371, // tell mongo how many radians go into one kilometer.
+      limit: req.limit || 10
+    }, util.lift(res, function(users) {
+      var withDistance = _.map(users, function(elem) {
+        var obj = util.copy(elem.obj);
+        obj.distance = elem.dis;
+        return obj;
+      });
+      var filtered = _.filter(withDistance, function(elem) {
+        // check to see if classes in common
+        for (var i = 0; i < elem.classes.length; i++) {
+          for (var j = 0; j < user.classes.length; j++) {
+            if (elem.classes[i].name == user.classes[i].name) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      res.status(200);
+      res.send(filtered);
+    }));
+  }));
 });
 
 /* POST to update location */
