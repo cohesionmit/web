@@ -53,8 +53,8 @@ router.put('/profile', function(req, res) {
  * RPCs
  *****************************************/
 
-/* GET to find people nearby */
-router.get('/near', function(req, res) {
+/* POST to find people nearby */
+router.post('/near', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
     User.geoNear(user.location, {
       spherical : true,  // tell mongo the earth is round, so it calculates based on a
@@ -100,8 +100,8 @@ router.post('/location', function(req, res) {
   }));
 });
 
-/* GET classes */
-router.get('/classes', function(req, res) {
+/* POST to get classes */
+router.post('/getclasses', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
     res.status(200);
     res.send(user.classes);
@@ -109,7 +109,7 @@ router.get('/classes', function(req, res) {
 });
 
 /* POST to update classes */
-router.post('/classes', function(req, res) {
+router.post('/setclasses', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
     user.classes = req.body.classes;
     user.save(util.lift(res, function() {
