@@ -96,8 +96,7 @@ router.post('/near', function(req, res) {
 /* POST to update location */
 router.post('/location', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
-    user.location.longitude = req.body.longitude;
-    user.location.latitude = req.body.latitude;
+    user.location = [req.body.longitude, req.body.latitude];
     user.lastupdate = new Date();
     user.save(util.lift(res, function() {
       res.status(200);
