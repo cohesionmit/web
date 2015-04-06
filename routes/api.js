@@ -59,8 +59,7 @@ router.post('/near', function(req, res) {
     User.geoNear(user.location, {
       spherical : true,  // tell mongo the earth is round, so it calculates based on a
                          // spherical location system
-      distanceMultiplier: 6371, // tell mongo how many radians go into one kilometer.
-      limit: req.limit || 10
+      distanceMultiplier: 6371 // tell mongo how many radians go into one kilometer.
     }, util.lift(res, function(users) {
       var withDistance = _.map(users, function(elem) {
         var obj = util.copy(elem.obj);
@@ -70,6 +69,11 @@ router.post('/near', function(req, res) {
       var filtered = _.filter(withDistance, function(elem) {
         // check to see if user is self
         if (elem.fburl === user.fburl) {
+          return false;
+        }
+        // check to see if too old
+        var now = new Date();
+        if (now - elem.lastupdate > 20 * 60 * 1000) {
           return false;
         }
         // check to see if classes in common
@@ -82,8 +86,9 @@ router.post('/near', function(req, res) {
         }
         return false;
       });
+      var limited = filtered.slice(0, req.body.limit || 10);
       res.status(200);
-      res.send(filtered);
+      res.send(limited);
     }));
   }));
 });
@@ -93,6 +98,7 @@ router.post('/location', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
     user.location.longitude = req.body.longitude;
     user.location.latitude = req.body.latitude;
+    user.lastupdate = new Date();
     user.save(util.lift(res, function() {
       res.status(200);
       res.send({success: true});

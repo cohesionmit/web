@@ -6,6 +6,7 @@ var userSchema = new mongoose.Schema({
   fburl: {type: String, unique: true, required: true},
   active: {type: Boolean, default: false, required: true},
   location: {type: [Number], default: [0.0, 0.0], index: '2d'},
+  lastupdate: {type: Date, default: new Date(0), required: true},
   classes: [{name: String, status: {type: String, enum: ['TODO', 'STARTED', 'DONE']}}]
 });
 
