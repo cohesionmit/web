@@ -83,7 +83,9 @@ router.post('/near', function(req, res) {
         for (var i = 0; i < elem.classes.length; i++) {
           for (var j = 0; j < user.classes.length; j++) {
             if (elem.classes[i].name === user.classes[j].name) {
-              return true;
+              if (elem.classes[i].status !== 'DONE' && user.classes[j].status !== 'DONE') {
+                return true;
+              }
             }
           }
         }
