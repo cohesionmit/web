@@ -82,7 +82,7 @@ router.post('/near', function(req, res) {
         // check to see if classes in common
         for (var i = 0; i < elem.classes.length; i++) {
           for (var j = 0; j < user.classes.length; j++) {
-            if (elem.classes[i].name === user.classes[i].name) {
+            if (elem.classes[i].name === user.classes[j].name) {
               return true;
             }
           }
