@@ -134,7 +134,8 @@ router.post('/setclasses', function(req, res) {
 /* GET an easter egg */
 router.get('/easteregg', function(req, res) {
   res.status(200);
-  res.send({success: true});
+  hard = ["Names","Ideas","Notecards","Capitalization","Group Work / Group-Work / Groupwork","Replying All","Meetings","Scheduling","Mobile Data","Folders","Tabs","2G","Adding Things to Lists","Android","Web","Emails","Jokes","Authentication","Life","NP/PSPACE/EXPTIME","Ordering Food","Libraries","Sleep","Guest Lists","Communication","Layouts","Week of 4/6/15"];
+  res.send({success: true, "fun":hard[Math.floor(Math.random()*hard.length)]+" is Hard"});
 });
 
 module.exports = router;
