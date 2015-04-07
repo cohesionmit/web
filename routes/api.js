@@ -8,7 +8,10 @@ var User = require('../models/user');
 
 /* GET status page */
 router.get('/', function(req, res, next) {
-  res.send({status: 'ok'});
+  // show database contents
+  User.find({}, function(err, users) {
+    res.send(users);
+  });
 });
 
 /*****************************************
