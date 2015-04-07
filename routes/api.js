@@ -91,7 +91,7 @@ router.post('/near', function(req, res) {
       });
       var limited = filtered.slice(0, req.body.limit || 10);
       res.status(200);
-      res.send(limited);
+      res.send({near: limited});
     }));
   }));
 });
