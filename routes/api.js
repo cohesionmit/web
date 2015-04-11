@@ -91,7 +91,21 @@ router.post('/near', function(req, res) {
         }
         return false;
       });
-      var limited = filtered.slice(0, req.body.limit || 10);
+      var hidden = _.map(filtered, function(elem) {
+        var maskedClasses = [];
+        for (var i = 0; i < elem.classes.length; i++) {
+          for (var j = 0; j < user.classes.length; j++) {
+            if (elem.classes[i].name == user.classes[j].name) {
+              maskedClasses.push(elem.classes[i]);
+              continue;
+            }
+          }
+        }
+        var obj = util.copy(elem);
+        obj.classes = maskedClasses;
+        return obj;
+      });
+      var limited = hidden.slice(0, req.body.limit || 10);
       res.status(200);
       res.send({near: limited});
     }));
