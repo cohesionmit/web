@@ -16,6 +16,13 @@ router.get('/', function(req, res, next) {
   });
 });
 
+/* GET logs */
+router.get('/logs', function(req, res) {
+  Log.find({}, function(err, logs) {
+    res.send(logs);
+  });
+});
+
 /*****************************************
  * AUTH
  *****************************************/
