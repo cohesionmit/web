@@ -110,8 +110,8 @@ router.post('/location', function(req, res) {
 router.post('/getclasses', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
     res.status(200);
-    res.send(user.classes);
-    Log.create({kind: 'response', message: JSON.stringify(user.classes)});
+    res.send({classes: user.classes});
+    Log.create({kind: 'response', message: JSON.stringify({classes: user.classes})});
   }));
 });
 
