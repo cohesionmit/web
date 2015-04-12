@@ -76,7 +76,7 @@ router.post('/near', function(req, res) {
         }
         // check to see if too old
         var now = new Date();
-        if (now - elem.lastupdate > 20 * 60 * 1000) {
+        if (now - new Date(elem.lastupdate) > 20 * 60 * 1000) {
           return false;
         }
         // check to see if classes in common
