@@ -14,6 +14,8 @@ var app = express();
 var mongoose = require('mongoose');
 var db = mongoose.connect(config.dbUrl);
 
+var Log = require('./models/log');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -28,8 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
   if (config.debug) {
-    console.log(req.url);
-    console.log(req.body);
+    var msg = JSON.stringify({url: req.url, body: req.body});
+    Log.create({kind:'request', message: msg});
   }
   next();
 });

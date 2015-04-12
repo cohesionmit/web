@@ -5,11 +5,13 @@ var _ = require('underscore');
 
 var util = require('../util');
 var User = require('../models/user');
+var Log = require('../models/log');
 
 /* GET status page */
 router.get('/', function(req, res, next) {
   // show database contents
   User.find({}, function(err, users) {
+    Log.create({kind: 'response', message: '<contents of db omitted>'});
     res.send(users);
   });
 });
@@ -18,19 +20,6 @@ router.get('/', function(req, res, next) {
  * AUTH
  *****************************************/
 
-/* POST to log in */
-router.post('/login', function(req, res) {
-  // just kidding, you don't need to log in
-  // just submit the username along with all other requests
-  res.send({status: 'ok'});
-});
-
-/* POST to log out */
-router.post('/logout', function(req, res) {
-  // this doesn't actually need to do anything
-  res.send({status: 'ok'});
-});
-
 /* POST to register */
 router.post('/register', function(req, res) {
   var first = req.body.firstname;
@@ -38,18 +27,9 @@ router.post('/register', function(req, res) {
   var fburl = req.body.fburl;
   User.create({firstname: first, lastname: last, fburl: fburl}, util.lift(res, function(user) {
     res.status(200);
+    Log.create({kind: 'response', message: JSON.stringify({success: true})});
     res.send({success: true});
   }));
-});
-
-/*****************************************
- * ACCOUNT
- *****************************************/
-
-/* PUT to change profile */
-router.put('/profile', function(req, res) {
-  // can update username, real name
-  // we never actually need to do this
 });
 
 /*****************************************
@@ -108,6 +88,7 @@ router.post('/near', function(req, res) {
       var limited = hidden.slice(0, req.body.limit || 10);
       res.status(200);
       res.send({near: limited});
+      Log.create({kind: 'response', message: JSON.stringify({near: limited})});
     }));
   }));
 });
@@ -120,6 +101,7 @@ router.post('/location', function(req, res) {
     user.save(util.lift(res, function() {
       res.status(200);
       res.send({success: true});
+      Log.create({kind: 'response', message: JSON.stringify({success: true})});
     }));
   }));
 });
@@ -129,6 +111,7 @@ router.post('/getclasses', function(req, res) {
   User.findOne({fburl: req.body.fburl}, util.lift(res, function(user) {
     res.status(200);
     res.send(user.classes);
+    Log.create({kind: 'response', message: JSON.stringify(user.classes)});
   }));
 });
 
@@ -139,6 +122,7 @@ router.post('/setclasses', function(req, res) {
     user.save(util.lift(res, function() {
       res.status(200);
       res.send({success: true});
+      Log.create({kind: 'response', message: JSON.stringify({success: true})});
     }));
   }));
 });
@@ -147,11 +131,23 @@ router.post('/setclasses', function(req, res) {
  * OTHER
  *****************************************/
 
+/* POST feeddback */
+
+router.post('/feedback', function(req, res) {
+  var user = req.body.fburl;
+  var message = req.body.message;
+  Log.create({kind: 'feedback', message: JSON.stringify({user: user, message: message})}, util.lift(res, function(log) {
+    res.status(200);
+    res.send({success: true});
+  }));
+});
+
 /* GET an easter egg */
 router.get('/easteregg', function(req, res) {
   res.status(200);
   hard = ["Names","Ideas","Notecards","Capitalization","Group Work / Group-Work / Groupwork","Replying All","Meetings","Scheduling","Mobile Data","Folders","Tabs","2G","Adding Things to Lists","Android","Web","Emails","Jokes","Authentication","Life","NP/PSPACE/EXPTIME","Ordering Food","Libraries","Sleep","Guest Lists","Communication","Layouts","Week of 4/6/15"];
   res.send({success: true, "fun":hard[Math.floor(Math.random()*hard.length)]+" is Hard"});
+  Log.create({kind: 'response', message: '<easter egg omitted>'});
 });
 
 module.exports = router;
